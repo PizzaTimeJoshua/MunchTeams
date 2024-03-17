@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>MunchTeams</title>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+      <meta name="description" content="Top Public Replays for Pokemon Showdown Searcher.">
+      <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+      <style>
+         body {
+         background-color: #1e1e1e;
+         display: grid;
+         grid-template-columns: 1fr;
+         grid-template-rows: auto 1fr auto;
+         color: #e0e0e0;
+         font-family: Arial, sans-serif;
+         
+         }
+         input, button, select, option {
+         background-color: #222222;
+         accent-color:#222222;
+         color: #e0e0e0;
+         border: 1px solid #555;
+         padding: 8px 12px;
+         margin: 5px;
+         }
+         
+
+         input:hover, button:hover, select:hover, option:hover, input:checked {
+         background-color: #333333;
+         }
+         .twitter-follow-div {
+         padding-top: 5px;
+         padding-right: 5px;
+         justify-self: right;
+        }
+        .replay-container {
+         display: grid;
+         grid-template-columns: min-content 800px;
+         grid-gap: 30px;
+         padding-top: 0px;
+        }
+
+        .left, .right {
+         display: grid;
+         grid-template-columns: 1fr; 
+         grid-template-rows: auto auto auto auto auto;
+         text-align: left;
+         align-content:center;
+         align-items: center;
+         height: fit-content;
+         }
+         .left {
+            width: 300px;
+         }
+         .right {
+            text-align: center;
+         }
+
+         .sprite {
+            width: 40px;
+            height: 30px;
+            background-image: url("{{ url_for('static', filename='pokemonicons-sheet.png') }}");
+            background-size: 480px 3990px;
+        }
+        .sprite-container {
+            display: flex;
+            gap: 0px; /* Adjust the gap between images */
+            overflow-x: auto; /* Add horizontal scrolling if needed */
+        }
+        .team-container {
+            display: grid;
+            grid-template-columns: 60px auto 240px auto 240px auto 80px auto 100px; 
+            grid-template-rows: auto auto auto auto;
+            text-align: right;
+            line-height: 24px;
+        }
+         ul {
+            list-style-type: none;
+         }
+         .vl {
+            border-left: 1px solid #555;
+            height: 100%;
+         }
+         .hl {
+            border-top: 1px solid #555;
+            width: 100%;
+         }
+         .grid-item {
+            padding: 0px 4px;
+         }
+
+      </style>
+   </head>
+   <body>
+      <div class="twitter-follow-div">
+         <a href='https://ko-fi.com/V7V2QR4P2' target='_blank'><img height='29' style='border:0px;height:29px;' src='https://storage.ko-fi.com/cdn/kofi4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+         <a href="https://twitter.com/MunchStats?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-size="large" data-show-screen-name="false" data-dnt="true" data-show-count="false">Follow @MunchStats</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      </div>
+      <div class="replay-container">
+
+         <div class="left">
+            <h2>Replay Searcher</h2>
+            <h4 style="margin: 5px;">Select Format</h4>
+            <select id="formatSelect">
+               {% for format in available_formats %}
+                  <option value="{{ format }}">{{ format }}</option>
+               {% endfor %}
+            </select>
+            <h4 style="margin: 5px;">Filter By Pokemon</h4>
+            <input type="text" id="pokemonValue" placeholder='Seperate by comma. ex "Incineroar, Flutter Mane, Urshifu"'>
+
+            <label>
+               <input type="checkbox" id="usedToggle"> Pokemon Participated in Battle
+            </label>
+
+            <label>
+               <input type="checkbox" id="winnerToggle"> Pokemon is on Winning Team
+            </label>
+
+            <label>
+               <input type="checkbox" id="ratingToggle"> Filter By Rating
+            </label>
+            
+            <input type="text" id="ratingValue" placeholder="Threshold Rating (eg. '1500')" style="display: none;">
+
+            <input type="text" id="dayMinValue" value = 0 style="display: none;">
+            <input type="text" id="dayMaxValue" value = 0 style="display: none;">
+
+            <label>
+               <input type="checkbox" id="dateToggle"> Filter By Date
+            </label>
+
+            <input type="text" id="dateValue" name="daterange" style="display: none;"/>
+            
+            <button id="loadButton">Search Replays</button>
+         </div>
+
+         <div class="right">
+            <h2>Top Replays</h2>
+            <h3 id="loadingText" style="display: none;">Loading...</h3>
+            <ul id="replays-list"></ul>
+            <div id="test_sprite"></div>
+         </div>
+
+         
+      </div>
+  
+      <div style="text-align: center; height: 32px">
+         <h6>Pokémon and All Respective Names are Trademark & © of Nintendo 1996-2024</h6>   
+      </div>
+
+      <script src="{{ url_for('static', filename='replay_loader.js') }}"></script>
+      <script>
+         $(function() {
+           $('input[name="daterange"]').daterangepicker({
+             opens: 'left',
+             startDate: moment().subtract(1,'months'),
+             endDate: moment()
+           }, function(start, end, label) {
+            document.getElementById("dayMinValue").value = start.unix();
+            document.getElementById("dayMaxValue").value = end.unix();
+           });
+         });
+         document.getElementById("dayMinValue").value = moment().subtract(1,'months').unix();
+         document.getElementById("dayMaxValue").value = moment().unix();
+      </script>
+
+   </body>
+</html>
