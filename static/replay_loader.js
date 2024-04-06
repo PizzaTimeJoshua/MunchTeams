@@ -69,9 +69,6 @@ $(document).ready(function() {
 
         var filter_date_enabled = $('#dateToggle').is(':checked');
 
-        var filter_day_min = $('#dayMinValue').val();
-        var filter_day_max = $('#dayMaxValue').val();
-        
 
         // Make an AJAX request to the Flask endpoint with optional filter parameters
         $.ajax({

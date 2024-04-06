@@ -134,6 +134,18 @@ def load_replay():
     top_replays = find_replays(pokeSearch, filter_format,filters=filters)
     return jsonify(top_replays)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/replay_default')
 def load_replay_default():
     return jsonify(DEFAULT_REPLAYS)
