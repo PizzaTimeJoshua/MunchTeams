@@ -81,9 +81,6 @@ $(document).ready(function() {
                 filter_rating_enabled: filter_rating_enabled,
                 filter_rating: filter_rating,
                 filter_winner: filter_winner,
-                filter_day_min: filter_day_min,
-                filter_day_max: filter_day_max,
-                filter_date_enabled: filter_date_enabled
             },
             success: function(data) {
                 // Update the frontend with the new replay data
