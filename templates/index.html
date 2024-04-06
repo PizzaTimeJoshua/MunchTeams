@@ -6,8 +6,6 @@
       <title>MunchTeams</title>
       <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
       <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
       <meta name="description" content="Top Public Replays for Pokemon Showdown Searcher.">
       <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
       <style>
@@ -128,14 +126,6 @@
             
             <input type="text" id="ratingValue" placeholder="Threshold Rating (eg. '1500')" style="display: none;">
 
-            <input type="text" id="dayMinValue" value = 0 style="display: none;">
-            <input type="text" id="dayMaxValue" value = 0 style="display: none;">
-
-            <label>
-               <input type="checkbox" id="dateToggle"> Filter By Date
-            </label>
-
-            <input type="text" id="dateValue" name="daterange" style="display: none;"/>
             
             <button id="loadButton">Search Replays</button>
          </div>
@@ -155,20 +145,6 @@
       </div>
 
       <script src="{{ url_for('static', filename='replay_loader.js') }}"></script>
-      <script>
-         $(function() {
-           $('input[name="daterange"]').daterangepicker({
-             opens: 'left',
-             startDate: moment().subtract(1,'months'),
-             endDate: moment()
-           }, function(start, end, label) {
-            document.getElementById("dayMinValue").value = start.unix();
-            document.getElementById("dayMaxValue").value = end.unix();
-           });
-         });
-         document.getElementById("dayMinValue").value = moment().subtract(1,'months').unix();
-         document.getElementById("dayMaxValue").value = moment().unix();
-      </script>
 
    </body>
 </html>
