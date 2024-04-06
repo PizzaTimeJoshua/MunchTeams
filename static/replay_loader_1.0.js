@@ -67,8 +67,6 @@ $(document).ready(function() {
 
         var filter_winner = $('#winnerToggle').is(':checked');
 
-        var filter_date_enabled = $('#dateToggle').is(':checked');
-
 
         // Make an AJAX request to the Flask endpoint with optional filter parameters
         $.ajax({
