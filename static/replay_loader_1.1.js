@@ -48,6 +48,8 @@ $(document).ready(function() {
             },
             error: function(error) {
                 console.error('Error fetching replays:', error);
+                $('#errorText').toggle(true);
+                $('#loadingText').toggle(false);
             }
         });
 
@@ -55,6 +57,8 @@ $(document).ready(function() {
     function loadReplays() {
         $('#replays-list').empty();
         $('#loadingText').toggle(true);
+        $('#errorText').toggle(false);
+        $('#noReplaysText').toggle(false);
 
         var pokemonValue = $('#pokemonValue').val();
 
@@ -86,6 +90,8 @@ $(document).ready(function() {
             },
             error: function(error) {
                 console.error('Error fetching replays:', error);
+                $('#errorText').toggle(true);
+                $('#loadingText').toggle(false);
             }
         });
     }
@@ -97,6 +103,9 @@ $(document).ready(function() {
         $('#loadingText').toggle(false);
 
         // Append the new replays to the list
+        if (replays.length < 1) {
+            $('#noReplaysText').toggle(true);
+        }
         replays.forEach(function(replay) {
             li_item = '<li>';
             li_item+= '<button class = "team-container" onclick="window.open(\'https://replay.pokemonshowdown.com/'+replay[0]+'\', \'_blank\')" >';
