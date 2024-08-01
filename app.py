@@ -8,6 +8,8 @@ import pandas as pd
 FORMATS = [
     "gen9vgc2024regg",
     "gen9vgc2024reggbo3",
+    "gen9vgc2024regh",
+    "gen9vgc2024reghbo3",
     "gen9nationaldex",
     "gen9ou",
     "gen9nationaldexubers",
@@ -54,7 +56,7 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "r
 
     # Rating Filter
     if (filters["rating"]>0):
-        search_filter.append((df['rating'] >= filters["rating"]))
+        search_filter.append((df['rating'] <= filters["rating"]))
 
     # Winner Filter
     if (filters["winner"] and (pokeSearch != [])):
