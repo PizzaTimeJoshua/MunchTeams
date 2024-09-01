@@ -6,10 +6,10 @@ import re
 import pandas as pd
 
 FORMATS = [
-    "gen9vgc2024regg",
-    "gen9vgc2024reggbo3",
     "gen9vgc2024regh",
     "gen9vgc2024reghbo3",
+    "gen9vgc2024regg",
+    "gen9vgc2024reggbo3",
     "gen9nationaldex",
     "gen9ou",
     "gen9nationaldexubers",
