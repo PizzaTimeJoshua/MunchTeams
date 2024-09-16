@@ -3,7 +3,6 @@ import os
 import pyjson5
 import difflib
 import re
-import pandas as pd
 
 FORMATS = [
     "gen9vgc2024regh",
@@ -37,49 +36,48 @@ def safe_load_files():
         pokedexData = pyjson5.loads(pokedexRaw)
 
 def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "rating" : 0, "winner": False, "allow_duplicate_players" : False}):
-    global thread_status
-    with open(f"data/search-replays-list-{meta}.json","rb") as file:
-        replay_data = pyjson5.load(file)
+
     search_replays = []
-    
-    df = pd.DataFrame(replay_data)
 
-    search_filter = []
+    with open(f"data/search-replays-list-{meta}.json","rb") as file:
+        replay_data = pyjson5.load(file)  # Assume the file is a JSON array
+        for replay in replay_data:
+            
+            # Apply Pokémon search filter (check both teams)
+            if pokeSearch:
+                if not (set(pokeSearch).issubset(replay["teams"][0]) or set(pokeSearch).issubset(replay["teams"][1])):
+                    continue  # Skip if Pokémon aren't found in either team
 
-    # PokeSearch team filter
-    if (pokeSearch != []) :
-        search_filter.append(df['teams'].apply(lambda x: set(pokeSearch).issubset(x[0])) |  df['teams'].apply(lambda x: set(pokeSearch).issubset(x[1])))
+            # Apply teamused filter
+            if filters.get("teamused"):
+                if not (set(pokeSearch).issubset(replay["teamused"][0]) or set(pokeSearch).issubset(replay["teamused"][1])):
+                    continue
 
-    # Used in Battle Filter
-    if (filters["teamused"] and (pokeSearch != [])):
-        search_filter.append(df['teamused'].apply(lambda x: set(pokeSearch).issubset(x[0])) |  df['teamused'].apply(lambda x: set(pokeSearch).issubset(x[1])))
+            # Apply rating filter
+            if filters.get("rating", 0) > 0 and replay.get("rating", 0) > filters["rating"]:
+                continue  # Skip if rating is lower than the filter
 
-    # Rating Filter
-    if (filters["rating"]>0):
-        search_filter.append((df['rating'] <= filters["rating"]))
-
-    # Winner Filter
-    if (filters["winner"] and (pokeSearch != [])):
-        search_filter.append((df['teams'].apply(lambda x: set(pokeSearch).issubset(x[0])) & (df['winner_index'] == 1)) | (df['teams'].apply(lambda x: set(pokeSearch).issubset(x[1])) & (df['winner_index'] == 2))  )
-    # Duplicate Players Filter
-    if not (filters.get("allow_duplicate_players",False)):
-        search_filter.append((~df.duplicated(subset=['winner'], keep='first')))
-    
-    
-
-    final_filter = search_filter[0]
-    for condition in search_filter[1:]:
-        final_filter &= condition
-
-    replays = df[final_filter]
-    
-    for _, replay in replays.iterrows():
-
-        sprite_index_team = [ [get_sprite_pokemon(p) for p in replay["teams"][0]], [get_sprite_pokemon(p) for p in replay["teams"][1]] ]
-
-        search_replays.append([replay["id"],replay["rating"],replay["winner"],replay["players"],sprite_index_team,replay["score"],replay["uploadtime"]])
-        if (len(search_replays) >= replay_total):
-            break
+            # Apply winner filter
+            if filters.get("winner"):
+                if not ((set(pokeSearch).issubset(replay["teams"][0]) and replay["winner_index"] == 1) or 
+                        (set(pokeSearch).issubset(replay["teams"][1]) and replay["winner_index"] == 2)):
+                    continue
+                
+            sprite_index_team = [ [get_sprite_pokemon(p) for p in replay["teams"][0]], [get_sprite_pokemon(p) for p in replay["teams"][1]] ]
+            # Collect the valid replays
+            search_replays.append([
+                replay["id"],
+                replay["rating"],
+                replay["winner"],
+                replay["players"],
+                sprite_index_team,
+                replay["score"],
+                replay["uploadtime"]
+            ])
+            
+            # Stop once we reach the replay limit
+            if len(search_replays) >= replay_total:
+                break
     return search_replays
 
 safe_load_files()
