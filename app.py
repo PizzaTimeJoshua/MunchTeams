@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 import os
+import ijson
 import pyjson5
 import difflib
 import re
@@ -40,7 +41,7 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "r
     search_replays = []
 
     with open(f"data/search-replays-list-{meta}.json","rb") as file:
-        replay_data = pyjson5.load(file)  # Assume the file is a JSON array
+        replay_data = ijson.items(file,"item")  # Assume the file is a JSON array
         for replay in replay_data:
             
             # Apply Pokémon search filter (check both teams)

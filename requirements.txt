@@ -18,3 +18,4 @@ six==1.16.0
 tzdata==2024.1
 Werkzeug>=3.0.3
 wheel==0.41.2
+ijson==3.3.0
