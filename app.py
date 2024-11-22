@@ -8,8 +8,6 @@ import re
 FORMATS = [
     "gen9vgc2024regh",
     "gen9vgc2024reghbo3",
-    "gen9vgc2024regg",
-    "gen9vgc2024reggbo3",
     "gen9nationaldex",
     "gen9ou",
     "gen9nationaldexubers",
@@ -36,7 +34,7 @@ def safe_load_files():
             pokedexRaw = file.read()
         pokedexData = pyjson5.loads(pokedexRaw)
 
-def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "rating" : 0, "winner": False, "allow_duplicate_players" : False}):
+def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "rating" : 0, "winner": False, "allow_duplicate_players" : False,"usage_score":0}):
 
     search_replays = []
 
@@ -58,6 +56,10 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "r
             if filters.get("rating", 0) > 0 and replay.get("rating", 0) > filters["rating"]:
                 continue  # Skip if rating is lower than the filter
 
+            # Apply usage filter
+            if filters.get("usage_score", 0) > 0 and min(replay.get("usage_score", [600,600])) > filters["usage_score"]:
+                continue  # Skip if neither is lower than the filter
+
             # Apply winner filter
             if filters.get("winner"):
                 if not ((set(pokeSearch).issubset(replay["teams"][0]) and replay["winner_index"] == 1) or 
@@ -73,7 +75,8 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "r
                 replay["players"],
                 sprite_index_team,
                 replay["score"],
-                replay["uploadtime"]
+                replay["uploadtime"],
+                replay["usage_score"]
             ])
             
             # Stop once we reach the replay limit
@@ -103,17 +106,22 @@ def index():
 def load_replay():
     filter_battleused = request.args.get('filter_battleused') == 'true'
     filter_rating_enabled = request.args.get('filter_rating_enabled') == 'true'
+    filter_usage_score_enabled = request.args.get('filter_usage_score_enabled') == 'true'
     filter_winner = request.args.get('filter_winner') == 'true'
 
     pokemon_search = request.args.get('pokemon_search')
     filter_format = request.args.get('filter_format')
     filter_rating = request.args.get('filter_rating')
+    filter_usage_score = request.args.get('filter_usage_score')
 
     filters={ "teamused":filter_battleused, "rating" : 0, "winner": filter_winner}
 
     
     if (filter_rating_enabled and filter_rating.isnumeric()):
         filters["rating"] = int(filter_rating)
+
+    if (filter_usage_score_enabled and filter_usage_score.isnumeric()):
+        filters["usage_score"] = int(filter_usage_score)
 
     pokeSearch = []
     for poke in pokemon_search.split(","):

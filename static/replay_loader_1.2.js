@@ -10,6 +10,11 @@ $(document).ready(function() {
         $('#ratingValue').toggle(this.checked);
     });
 
+    $('#usageScoreToggle').on('change', function() {
+        $('#usageScoreValue').toggle(this.checked);
+        $('#usageScoreExplained').toggle(this.checked);
+    });
+
     $('#dateToggle').on('change', function() {
         $('#dateValue').toggle(this.checked);
     });
@@ -69,6 +74,9 @@ $(document).ready(function() {
         var filter_rating_enabled = $('#ratingToggle').is(':checked');
         var filter_rating = $('#ratingValue').val();
 
+        var filter_usage_score_enabled = $('#usageScoreToggle').is(':checked');
+        var filter_usage_score = $('#usageScoreValue').val();
+
         var filter_winner = $('#winnerToggle').is(':checked');
 
 
@@ -82,6 +90,8 @@ $(document).ready(function() {
                 filter_battleused: filter_battleused,
                 filter_rating_enabled: filter_rating_enabled,
                 filter_rating: filter_rating,
+                filter_usage_score_enabled: filter_usage_score_enabled,
+                filter_usage_score: filter_usage_score,
                 filter_winner: filter_winner,
             },
             success: function(data) {
@@ -150,6 +160,29 @@ $(document).ready(function() {
             li_item+= '<div class="grid-item"></div>';
             li_item+= '<div class="vl"></div>'
             li_item+= '<div class="grid-item"></div>';
+
+            if ($('#usageScoreToggle').is(':checked') === true) {
+                li_item+= '<div class="hl"></div>'
+                li_item+= '<div class="hl"></div>'
+                li_item+= '<div class="hl"></div>'
+                li_item+= '<div class="hl"></div>'
+                li_item+= '<div class="hl"></div>'
+                li_item+= '<div class="hl"></div>'
+                li_item+= '<div class="hl"></div>'
+                li_item+= '<div class="hl"></div>'
+                li_item+= '<div class="hl"></div>'
+
+                li_item+= '<div class="grid-item"></div>';
+                li_item+= '<div class="vl"></div>'
+                li_item+= '<div class="grid-item">Usage Score: '+ parseFloat(replay[7][0]).toFixed(2)+'</div>';
+                li_item+= '<div class="vl"></div>'
+                li_item+= '<div class="grid-item">Usage Score: '+ parseFloat(replay[7][1]).toFixed(2)+'</div>';
+                li_item+= '<div class="vl"></div>'
+                li_item+= '<div class="grid-item"></div>';
+                li_item+= '<div class="vl"></div>'
+                li_item+= '<div class="grid-item"></div>';
+            }
+            
 
             
             li_item+= '</button>';

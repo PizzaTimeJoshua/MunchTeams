@@ -1,14 +1,15 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
-   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>MunchTeams</title>
-      <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-      <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-      <meta name="description" content="Top Public Replays for Pokemon Showdown Searcher.">
-      <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-      <style>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>MunchTeams</title>
+<script src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" type="text/javascript"></script>
+<meta content="Top Public Replays for Pokemon Showdown Searcher." name="description"/>
+<link href="{{ url_for('static', filename='favicon.ico') }}" rel="icon" type="image/x-icon"/>
+<style>
          body {
          background-color: #1e1e1e;
          display: grid;
@@ -69,6 +70,7 @@
             display: flex;
             gap: 0px; /* Adjust the gap between images */
             overflow-x: auto; /* Add horizontal scrolling if needed */
+            padding: 0px 0px 4px 0px;
         }
         .team-container {
             display: grid;
@@ -104,63 +106,55 @@
          }
 
       </style>
-   </head>
-   <body>
-      <div class="twitter-follow-div">
-         <a href="https://munchstats.com" target='_blank' class="munchstats-button">Check out MunchStats!</a>
-         <a href='https://ko-fi.com/V7V2QR4P2' target='_blank'><img height='29' style='border:0px;height:29px;' src='https://storage.ko-fi.com/cdn/kofi4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-         <a href="https://twitter.com/MunchStats?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-size="large" data-show-screen-name="false" data-dnt="true" data-show-count="false">Follow @MunchStats</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-      </div>
-      <div class="replay-container">
-
-         <div class="left">
-            <h2>Replay Searcher</h2>
-            <h4 style="margin: 5px;">Select Format</h4>
-            <select id="formatSelect">
+</head>
+<body>
+<div class="twitter-follow-div">
+<a class="munchstats-button" href="https://munchstats.com" target="_blank">Check out MunchStats!</a>
+<a href="https://ko-fi.com/V7V2QR4P2" target="_blank"><img alt="Buy Me a Coffee at ko-fi.com" border="0" height="29" src="https://storage.ko-fi.com/cdn/kofi4.png?v=3" style="border:0px;height:29px;"/></a>
+<a class="twitter-follow-button" data-dnt="true" data-show-count="false" data-show-screen-name="false" data-size="large" href="https://twitter.com/MunchStats?ref_src=twsrc%5Etfw">Follow @MunchStats</a><script async="" charset="utf-8" src="https://platform.twitter.com/widgets.js"></script>
+</div>
+<div class="replay-container">
+<div class="left">
+<h2>Replay Searcher</h2>
+<h4 style="margin: 5px;">Select Format</h4>
+<select id="formatSelect">
                {% for format in available_formats %}
                   <option value="{{ format }}">{{ format }}</option>
                {% endfor %}
             </select>
-            <h4 style="margin: 5px;">Filter By Pokemon</h4>
-            <input type="text" id="pokemonValue" placeholder='Seperate by comma. ex "Incineroar, Flutter Mane, Urshifu"'>
-
-            <label>
-               <input type="checkbox" id="usedToggle"> Pokemon Participated in Battle
+<h4 style="margin: 5px;">Filter By Pokemon</h4>
+<input id="pokemonValue" placeholder='Seperate by comma. ex "Incineroar, Flutter Mane, Urshifu"' type="text"/>
+<label>
+<input id="usedToggle" type="checkbox"/> Pokemon Participated in Battle
             </label>
-
-            <label>
-               <input type="checkbox" id="winnerToggle"> Pokemon is on Winning Team
+<label>
+<input id="winnerToggle" type="checkbox"/> Pokemon is on Winning Team
             </label>
-
-            <label>
-               <input type="checkbox" id="ratingToggle"> Filter By Rating
+<label>
+<input id="ratingToggle" type="checkbox"/> Filter By Rating
             </label>
-            
-            <input type="text" id="ratingValue" placeholder="Max Rating (eg. '1500')" style="display: none;">
-
-            
-            <button id="loadButton">Search Replays</button>
-         </div>
-
-         <div class="right">
-            <h2>Top Replays From Last Month</h2>
-            <h4>Last Updated: November 1, 2024</h4>
-            <h3 id="loadingText" style="display: none;">Loading...</h3>
-            <h3 id="noReplaysText" style="display: none;">No Replays Found.</h3>
-            <h3 id="errorText" style="display: none;">Error: Unable to get replays.</h3>
-            <ul id="replays-list"></ul>
-            <div id="test_sprite"></div>
-         </div>
-
-         
-      </div>
-  
-      <div style="text-align: center; height: 32px">
-         <h6><a href="about">About</a></h6>
-         <h6>Pokémon and All Respective Names are Trademark & © of Nintendo 1996-2024</h6>   
-      </div>
-
-      <script src="{{ url_for('static', filename='replay_loader_1.1.js') }}"></script>
-
-   </body>
+<input id="ratingValue" placeholder="Max Rating (eg. '1500')" style="display: none;" type="text"/>
+<label>
+<input id="usageScoreToggle" type="checkbox"/> Show Usage Score (Beta)
+            </label>
+<i id="usageScoreExplained" style="display: none; font-size: 12px; padding: 0px 6px;">Usage Score is the collective percentage usage of a team based on usage statistics.</i>
+<input id="usageScoreValue" placeholder="Filter By Usage Score" style="display: none;" type="text"/>
+<button id="loadButton">Search Replays</button>
+</div>
+<div class="right">
+<h2>Top Replays From Last Month</h2>
+<h4>Last Updated: November 21, 2024</h4>
+<h3 id="loadingText" style="display: none;">Loading...</h3>
+<h3 id="noReplaysText" style="display: none;">No Replays Found.</h3>
+<h3 id="errorText" style="display: none;">Error: Unable to get replays.</h3>
+<ul id="replays-list"></ul>
+<div id="test_sprite"></div>
+</div>
+</div>
+<div style="text-align: center; height: 32px">
+<h6><a href="about">About</a></h6>
+<h6>Pokémon and All Respective Names are Trademark &amp; © of Nintendo 1996-2024</h6>
+</div>
+<script src="{{ url_for('static', filename='replay_loader_1.2.js') }}"></script>
+</body>
 </html>
