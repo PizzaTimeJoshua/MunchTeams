@@ -19,7 +19,7 @@
          font-family: Arial, sans-serif;
          
          }
-         input, button, select, option {
+         input, button, select, option, .team-container {
          background-color: #222222;
          accent-color:#222222;
          color: #e0e0e0;
@@ -30,7 +30,10 @@
          
 
          input:hover, button:hover, select:hover, option:hover, input:checked {
-         background-color: #333333;
+         background-color: #444444;
+         }
+         .noHover{
+            pointer-events: none;
          }
          .twitter-follow-div {
          padding-top: 5px;
@@ -74,10 +77,12 @@
         }
         .team-container {
             display: grid;
-            grid-template-columns: 60px auto 240px auto 240px auto 80px auto 100px; 
+            grid-template-columns: 60px auto 240px auto 240px auto 80px auto 100px auto max-content; 
             grid-template-rows: auto auto auto auto;
             text-align: right;
             line-height: 24px;
+            font-family: sans-serif;
+            font-size: 14px;
         }
          ul {
             list-style-type: none;
@@ -143,7 +148,7 @@
 </div>
 <div class="right">
 <h2>Top Replays From Last Month</h2>
-<h4>Last Updated: April 16, 2025</h4>
+<h4>Last Updated: April 17, 2025</h4>
 <h3 id="loadingText" style="display: none;">Loading...</h3>
 <h3 id="noReplaysText" style="display: none;">No Replays Found.</h3>
 <h3 id="errorText" style="display: none;">Error: Unable to get replays.</h3>

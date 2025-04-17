@@ -71,14 +71,16 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "r
             sprite_index_team = [ [get_sprite_pokemon(p) for p in replay["teams"][0]], [get_sprite_pokemon(p) for p in replay["teams"][1]] ]
             # Collect the valid replays
             search_replays.append([
-                replay["id"],
-                replay["rating"],
-                replay["winner"],
-                replay["players"],
-                sprite_index_team,
-                replay["score"],
-                replay["uploadtime"],
-                replay["usage_score"]
+                replay["id"],         # 0
+                replay["rating"],     # 1
+                replay["winner"],     # 2
+                replay["players"],    # 3
+                sprite_index_team,    # 4
+                replay["score"],      # 5
+                replay["uploadtime"], # 6
+                replay["usage_score"],# 7
+                replay["bo3_matches"],# 8
+                replay["format"]      # 9
             ])
             
             # Stop once we reach the replay limit
