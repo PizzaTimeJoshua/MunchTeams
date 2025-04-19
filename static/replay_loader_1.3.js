@@ -40,7 +40,9 @@ $(document).ready(function() {
     function defaultReplays() {
         $('#replays-list').empty();
         $('#loadingText').toggle(true);
-
+        var availableFormats = $('#formatSelect option').map(function() {
+            return $(this).val();
+        }).get();
         // Make an AJAX request to the Flask endpoint with optional filter parameters
         $.ajax({
             url: '/replay_default',
@@ -49,7 +51,7 @@ $(document).ready(function() {
             },
             success: function(data) {
                 // Update the frontend with the new replay data
-                updateReplays(data);
+                updateReplays(data,availableFormats[0]);
             },
             error: function(error) {
                 console.error('Error fetching replays:', error);
@@ -96,7 +98,7 @@ $(document).ready(function() {
             },
             success: function(data) {
                 // Update the frontend with the new replay data
-                updateReplays(data);
+                updateReplays(data,filter_format);
             },
             error: function(error) {
                 console.error('Error fetching replays:', error);
@@ -106,7 +108,7 @@ $(document).ready(function() {
         });
     }
 
-    function updateReplays(replays) {
+    function updateReplays(replays,format) {
         // Clear the existing list
         $('#replays-list').empty();
 
@@ -116,6 +118,8 @@ $(document).ready(function() {
         if (replays.length < 1) {
             $('#noReplaysText').toggle(true);
         }
+        $('#format-name').empty();
+        $('#format-name').append(format);
         replays.forEach(function(replay) {
             var bo3 = replay[9].includes("Bo3");
             li_item = '<li>';
@@ -131,7 +135,12 @@ $(document).ready(function() {
             li_item+= '<div class="vl"></div>';
             li_item+= '<div class="grid-item">Player 2</div>';
             li_item+= '<div class="vl"></div>';
-            li_item+= '<div class="grid-item">End Score</div>';
+            if (bo3) {
+                li_item+= '<div class="grid-item">Bo3 Score</div>';
+            } else {
+                 li_item+= '<div class="grid-item">End Score</div>';
+            }
+           
             li_item+= '<div class="vl"></div>';
             li_item+= '<div class="grid-item">Upload Date</div>';
             if (bo3) {
