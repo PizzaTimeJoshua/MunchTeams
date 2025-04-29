@@ -68,6 +68,7 @@ $(document).ready(function() {
         $('#noReplaysText').toggle(false);
 
         var pokemonValue = $('#pokemonValue').val();
+        var playerValue = $('#playerValue').val();
 
         var filter_format = $('#formatSelect').val();
 
@@ -95,6 +96,7 @@ $(document).ready(function() {
                 filter_usage_score_enabled: filter_usage_score_enabled,
                 filter_usage_score: filter_usage_score,
                 filter_winner: filter_winner,
+                filter_players: playerValue
             },
             success: function(data) {
                 // Update the frontend with the new replay data

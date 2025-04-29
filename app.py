@@ -36,7 +36,12 @@ def safe_load_files():
             pokedexRaw = file.read()
         pokedexData = pyjson5.loads(pokedexRaw)
 
-def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "rating" : 0, "winner": False, "allow_duplicate_players" : False,"usage_score":0}):
+def find_replays(pokeSearch,meta,replay_total=100,filters={"teamused":False,
+                                                            "rating" : 0,
+                                                            "winner": False,
+                                                            "allow_duplicate_players" : False,
+                                                            "usage_score":0,
+                                                            "player_search":[]}):
 
     search_replays = []
 
@@ -48,6 +53,14 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={ "teamused":False, "r
             if pokeSearch:
                 if not (set(pokeSearch).issubset(replay["teams"][0]) or set(pokeSearch).issubset(replay["teams"][1])):
                     continue  # Skip if Pokémon aren't found in either team
+            
+            # Apply Player Search
+            if len(filters.get("player_search"))>0:
+                players = set([p.lower().replace(" ","") for p in filters.get("player_search")]) # Lowercase and Remove Spaces
+                replay_players = set([p.lower().replace(" ","") for p in replay["players"]])
+                if not (players & replay_players):
+                    continue
+
 
             # Apply teamused filter
             if filters.get("teamused"):
@@ -114,6 +127,7 @@ def load_replay():
     filter_winner = request.args.get('filter_winner') == 'true'
 
     pokemon_search = request.args.get('pokemon_search')
+    filter_players = request.args.get('filter_players')
     filter_format = request.args.get('filter_format')
     filter_rating = request.args.get('filter_rating')
     filter_usage_score = request.args.get('filter_usage_score')
@@ -128,6 +142,7 @@ def load_replay():
         filters["usage_score"] = int(filter_usage_score)
 
     pokeSearch = []
+    filters["player_search"] = filter_players.split(",")
     for poke in pokemon_search.split(","):
         word = poke.lower()
         possibilities = pokedexData.keys()
