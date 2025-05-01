@@ -55,7 +55,7 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={"teamused":False,
                     continue  # Skip if Pokémon aren't found in either team
             
             # Apply Player Search
-            if len(filters.get("player_search"))>0:
+            if (len(filters.get("player_search"))>0) and (filters.get("player_search")[0]!=""):
                 players = set([p.lower().replace(" ","") for p in filters.get("player_search")]) # Lowercase and Remove Spaces
                 replay_players = set([p.lower().replace(" ","") for p in replay["players"]])
                 if not (players & replay_players):
