@@ -156,7 +156,7 @@ def load_replay():
                 pokeSearch.append(pokeName) 
 
         
-    print(pokeSearch,filters)
+    print(pokeSearch,filter_format,filters)
     top_replays = find_replays(pokeSearch, filter_format,filters=filters)
     return jsonify(top_replays)
 
