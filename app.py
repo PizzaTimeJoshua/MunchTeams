@@ -42,7 +42,8 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={"teamused":False,
                                                             "winner": False,
                                                             "allow_duplicate_players" : False,
                                                             "usage_score":0,
-                                                            "player_search":[]}):
+                                                            "player_search":[],
+                                                            "filter_all_pokemon" : True}):
 
     search_replays = []
 
@@ -52,8 +53,12 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={"teamused":False,
             
             # Apply Pokémon search filter (check both teams)
             if pokeSearch:
-                if not (set(pokeSearch).issubset(replay["teams"][0]) or set(pokeSearch).issubset(replay["teams"][1])):
-                    continue  # Skip if Pokémon aren't found in either team
+                if (filters.get('filter_all_pokemon')):
+                    if not (set(pokeSearch).issubset(replay["teams"][0]) or set(pokeSearch).issubset(replay["teams"][1])):
+                        continue  # Skip if All Pokémon aren't found in either team
+                else:
+                    if (len(set(pokeSearch).intersection(replay["teams"][0])) + len(set(pokeSearch).intersection(replay["teams"][1]))) == 0:
+                        continue  # Skip if Any Pokémon aren't found in either team
             
             # Apply Player Search
             if (len(filters.get("player_search"))>0) and (filters.get("player_search")[0]!=""):
@@ -65,8 +70,12 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={"teamused":False,
 
             # Apply teamused filter
             if filters.get("teamused"):
-                if not (set(pokeSearch).issubset(replay["teamused"][0]) or set(pokeSearch).issubset(replay["teamused"][1])):
-                    continue
+                if (filters.get('filter_all_pokemon')):
+                    if not (set(pokeSearch).issubset(replay["teamused"][0]) or set(pokeSearch).issubset(replay["teamused"][1])):
+                        continue
+                    else:
+                        if (len(set(pokeSearch).intersection(replay["teamused"][0])) + len(set(pokeSearch).intersection(replay["teamused"][1]))) == 0:
+                            continue
 
             # Apply rating filter
             if filters.get("rating", 0) > 0 and replay.get("rating", 0) > filters["rating"]:
@@ -78,9 +87,14 @@ def find_replays(pokeSearch,meta,replay_total=100,filters={"teamused":False,
 
             # Apply winner filter
             if filters.get("winner"):
-                if not ((set(pokeSearch).issubset(replay["teams"][0]) and replay["winner_index"] == 1) or 
-                        (set(pokeSearch).issubset(replay["teams"][1]) and replay["winner_index"] == 2)):
-                    continue
+                if (filters.get('filter_all_pokemon')):
+                    if not ((set(pokeSearch).issubset(replay["teams"][0]) and replay["winner_index"] == 1) or 
+                            (set(pokeSearch).issubset(replay["teams"][1]) and replay["winner_index"] == 2)):
+                        continue
+                else:
+                     if not (((len(set(pokeSearch).intersection(replay["teams"][0])) > 0) and replay["winner_index"] == 1) or 
+                             ((len(set(pokeSearch).intersection(replay["teams"][1])) > 0) and replay["winner_index"] == 2)):
+                        continue
                 
             sprite_index_team = [ [get_sprite_pokemon(p) for p in replay["teams"][0]], [get_sprite_pokemon(p) for p in replay["teams"][1]] ]
             # Collect the valid replays
@@ -132,8 +146,9 @@ def load_replay():
     filter_format = request.args.get('filter_format')
     filter_rating = request.args.get('filter_rating')
     filter_usage_score = request.args.get('filter_usage_score')
+    filter_all_pokemon = request.args.get('filter_all_pokemon') == 'true'
 
-    filters={ "teamused":filter_battleused, "rating" : 0, "winner": filter_winner}
+    filters={ "teamused":filter_battleused, "rating" : 0, "winner": filter_winner, "filter_all_pokemon":filter_all_pokemon}
 
     
     if (filter_rating_enabled and filter_rating.isnumeric()):

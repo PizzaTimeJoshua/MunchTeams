@@ -109,7 +109,16 @@
             font-size: 12px;
             vertical-align: top;
          }
-
+         fieldset {
+            border-color: #555;
+            font-size: 12px;
+            margin: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+         }
+         legend {
+            font-size: 16px;
+         }
       </style>
 </head>
 <body>
@@ -127,13 +136,25 @@
                   <option value="{{ format }}">{{ format }}</option>
                {% endfor %}
             </select>
-<h4 style="margin: 5px;">Filter By Pokemon</h4>
-<input id="pokemonValue" placeholder='Seperate by comma. ex "Incineroar, Flutter Mane, Urshifu"' type="text"/>
-<h4 style="margin: 5px;">Filter By Players</h4>
-<input id="playerValue" placeholder='Seperate by comma. ex "Ash, Wolfe, Ray Rizzo"' type="text"/>
+<fieldset>
+<legend>Filter By Pokemon</legend>
+<input id="pokemonValue" placeholder='Seperate by comma. ex "Incineroar, Flutter Mane, Urshifu"' style="width: -webkit-fill-available;" type="text"/>
+<div>
+<input checked="" id="allPokemon" name="drone" type="radio" value="allPokemon"/>
+<label for="allPokemon">Find All Pokemon on a Team Search</label>
+</div>
+<div>
+<input id="anyPokemon" name="drone" type="radio" value="anyPokemon"/>
+<label for="anyPokemon">Find Any Pokemon on a Team Search</label>
+</div>
+</fieldset>
+<fieldset>
+<legend>Filter By Players</legend>
+<input id="playerValue" placeholder='Seperate by comma. ex "Ash, Wolfe, Ray Rizzo"' style="width: -webkit-fill-available;" type="text">
+</input></fieldset>
 <label>
-<input id="usedToggle" type="checkbox"/> Pokemon Participated in Battle
-            </label>
+<input id="usedToggle" type="checkbox"> Pokemon Participated in Battle
+            </input></label>
 <label>
 <input id="winnerToggle" type="checkbox"/> Pokemon is on Winning Team
             </label>
@@ -163,6 +184,6 @@
 <h6><a href="about">About</a></h6>
 <h6>Pokémon and All Respective Names are Trademark &amp; © of Nintendo 1996-2024</h6>
 </div>
-<script src="{{ url_for('static', filename='replay_loader_1.4.js') }}"></script>
+<script src="{{ url_for('static', filename='replay_loader_1.5.js') }}"></script>
 </body>
 </html>

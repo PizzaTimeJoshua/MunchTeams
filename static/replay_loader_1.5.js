@@ -82,6 +82,8 @@ $(document).ready(function() {
 
         var filter_winner = $('#winnerToggle').is(':checked');
 
+        var filter_all_pokemon = $('#allPokemon').is(':checked');
+
 
         // Make an AJAX request to the Flask endpoint with optional filter parameters
         $.ajax({
@@ -96,7 +98,8 @@ $(document).ready(function() {
                 filter_usage_score_enabled: filter_usage_score_enabled,
                 filter_usage_score: filter_usage_score,
                 filter_winner: filter_winner,
-                filter_players: playerValue
+                filter_players: playerValue,
+                filter_all_pokemon : filter_all_pokemon
             },
             success: function(data) {
                 // Update the frontend with the new replay data
