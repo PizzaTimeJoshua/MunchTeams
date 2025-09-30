@@ -1,4 +1,4 @@
-# MunchTeams — README.md (Ready to use)
+# MunchTeams — README.md
 
 > **Live:** https://munchteams.com  
 > **Repo:** https://github.com/PizzaTimeJoshua/MunchTeams
