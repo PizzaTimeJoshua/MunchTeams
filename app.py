@@ -17,7 +17,8 @@ FORMATS = [
     "gen9anythinggoes",
     "gen9doublesou",
     "gen9ubers",
-    "gen9nationaldexdoubles"
+    "gen9nationaldexdoubles",
+    "gen9terastalcrescendo"
 ]
 
 app = Flask(__name__)
