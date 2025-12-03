@@ -6,6 +6,8 @@ import difflib
 import re
 
 FORMATS = [
+    "gen9vgc2026regfbo3",
+    "gen9vgc2026regf",
     "gen9vgc2025reghbo3",
     "gen9vgc2025regh",
     "gen9vgc2025regj",
