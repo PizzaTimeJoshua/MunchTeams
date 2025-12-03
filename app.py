@@ -8,11 +8,7 @@ import re
 FORMATS = [
     "gen9vgc2026regfbo3",
     "gen9vgc2026regf",
-    "gen9vgc2025reghbo3",
-    "gen9vgc2025regh",
     "gen9vgc2025regj",
-    "gen9vgc2025regibo3",
-    "gen9vgc2025regi",
     "gen9nationaldex",
     "gen9ou",
     "gen9nationaldexubers",
@@ -20,7 +16,6 @@ FORMATS = [
     "gen9doublesou",
     "gen9ubers",
     "gen9nationaldexdoubles",
-    "gen9terastalcrescendo"
 ]
 
 app = Flask(__name__)
