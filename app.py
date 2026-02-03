@@ -8,7 +8,7 @@ import re
 FORMATS = [
     "gen9vgc2026regfbo3",
     "gen9vgc2026regf",
-    "gen9vgc2025regj",
+    "gen9vgc2026regi",
     "gen9nationaldex",
     "gen9ou",
     "gen9nationaldexubers",
