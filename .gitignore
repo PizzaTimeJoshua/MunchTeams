@@ -15,6 +15,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+!static/replay_assets/js/lib/
 lib64/
 parts/
 sdist/
