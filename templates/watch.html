@@ -229,6 +229,8 @@ fetch(logUrl)
 document.addEventListener('click', function(e) {
   var link = e.target.closest ? e.target.closest('a') : null;
   if (!link) return;
+  // Don't intercept the fallback link in the error state
+  if (link.id === 'fallbackLink') return;
   var href = link.href || link.getAttribute('href') || '';
   // Match full URLs or relative paths to replay IDs
   var match = href.match(/replay\.pokemonshowdown\.com\/([a-z0-9-]+)/i) ||
