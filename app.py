@@ -187,9 +187,71 @@ def internal_server_error(e):
 def about():
     return render_template('about.html')
 
+@app.route('/watch/<replay_id>')
+def watch_replay(replay_id):
+    return render_template('watch.html', replay_id=replay_id)
+
 @app.route('/replay_default')
 def load_replay_default():
     return jsonify(DEFAULT_REPLAYS)
+
+@app.route('/team_rankings')
+def team_rankings():
+    format_name = request.args.get('format', FORMATS[0])
+    limit = min(int(request.args.get('limit', 50)), 200)
+    pokemon_search = request.args.get('pokemon_search', '')
+    filter_all_pokemon = request.args.get('filter_all_pokemon', 'true') == 'true'
+
+    # Resolve Pokemon names via fuzzy matching
+    poke_filter = []
+    if pokemon_search.strip():
+        for poke in pokemon_search.split(","):
+            word = poke.strip().lower()
+            if not word:
+                continue
+            possibilities = pokedexData.keys()
+            normalized_possibilities = {p.lower(): p for p in possibilities}
+            result = difflib.get_close_matches(word, normalized_possibilities.keys(), 10)
+            normalized_result = [normalized_possibilities[r] for r in result]
+            if normalized_result:
+                pokeName = pokedexData[normalized_result[0]].get("name", "")
+                if pokeName:
+                    poke_filter.append(pokeName)
+
+    filepath = f"data/team-rankings-{format_name}.json"
+    if not os.path.exists(filepath):
+        return jsonify([])
+    with open(filepath, 'r', encoding='utf8') as f:
+        data = pyjson5.loads(f.read())
+
+    results = []
+    for team in data:
+        # Apply Pokemon filter
+        if poke_filter:
+            team_names = set(team['team'])
+            if filter_all_pokemon:
+                if not set(poke_filter).issubset(team_names):
+                    continue
+            else:
+                if not set(poke_filter) & team_names:
+                    continue
+
+        sprite_indices = [get_sprite_pokemon(p) for p in team['team']]
+        results.append({
+            'team': team['team'],
+            'sprites': sprite_indices,
+            'wins': team['wins'],
+            'losses': team['losses'],
+            'total_battles': team['total_battles'],
+            'avg_rating': round(team['avg_rating']),
+            'max_rating': team['max_rating'],
+            'win_rate': round(team['win_rate'] * 100, 1),
+            'rank_score': round(team['rank_score'], 1),
+            'replays': team['replays'][:20]
+        })
+        if len(results) >= limit:
+            break
+    return jsonify(results)
 
 
 if __name__ == "__main__":

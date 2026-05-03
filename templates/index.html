@@ -10,82 +10,176 @@
 <meta content="Top Public Replays for Pokemon Showdown Searcher." name="description"/>
 <link href="{{ url_for('static', filename='favicon.ico') }}" rel="icon" type="image/x-icon"/>
 <style>
+         * {
+            box-sizing: border-box;
+         }
          body {
-         background-color: #1e1e1e;
-         display: grid;
-         grid-template-columns: 1fr;
-         grid-template-rows: auto 1fr auto;
-         color: #e0e0e0;
-         font-family: Arial, sans-serif;
-         
+            background-color: #1e1e1e;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr auto;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
          }
-         input, button, select, option, .team-container {
-         background-color: #222222;
-         accent-color:#222222;
-         color: #e0e0e0;
-         border: 1px solid #555;
-         padding: 8px 12px;
-         margin: 5px;
+         h2 {
+            font-weight: 600;
+            letter-spacing: -0.3px;
          }
-         
-
-         input:hover, button:hover, select:hover, option:hover, input:checked {
-         background-color: #444444;
+         h3, h4 {
+            font-weight: 500;
+            color: #bbb;
          }
-         .noHover{
+         input, select, option {
+            background-color: #222222;
+            accent-color: #04AA6D;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            padding: 10px 14px;
+            margin: 4px 0;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+         }
+         input:focus, select:focus {
+            outline: none;
+            border-color: #04AA6D;
+            box-shadow: 0 0 0 3px rgba(4, 170, 109, 0.15);
+         }
+         input:hover, select:hover {
+            border-color: #666;
+         }
+         input[type="radio"], input[type="checkbox"] {
+            width: auto;
+            margin: 0 6px 0 0;
+            cursor: pointer;
+         }
+         button {
+            background-color: #04AA6D;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            margin: 4px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+         }
+         button:hover {
+            background-color: #038a57;
+            box-shadow: 0 4px 12px rgba(4, 170, 109, 0.3);
+         }
+         button:active {
+            transform: scale(0.98);
+         }
+         .team-container {
+            background-color: #222222;
+            border: 1px solid #555;
+            border-radius: 12px;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 60px auto 240px auto 240px auto 100px auto 100px auto max-content;
+            grid-template-rows: auto auto auto auto;
+            text-align: right;
+            line-height: 24px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 14px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+         }
+         .team-container:hover {
+            border-color: #04AA6D;
+            box-shadow: 0 4px 20px rgba(4, 170, 109, 0.15);
+            transform: translateY(-1px);
+         }
+         button.team-container {
+            cursor: pointer;
+            color: #e0e0e0;
+            text-align: right;
+         }
+         .noHover {
             pointer-events: none;
          }
          .twitter-follow-div {
-         padding-top: 5px;
-         padding-right: 5px;
-         justify-self: right;
-        }
-        .replay-container {
-         display: grid;
-         grid-template-columns: min-content 800px;
-         grid-gap: 30px;
-         padding-top: 0px;
-        }
-
-        .left, .right {
-         display: grid;
-         grid-template-columns: 1fr; 
-         grid-template-rows: auto auto auto auto auto;
-         text-align: left;
-         align-content:center;
-         align-items: center;
-         height: fit-content;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+         }
+         .replay-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            grid-gap: 30px;
+            padding: 0 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+         }
+         .left, .right {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            height: fit-content;
          }
          .left {
             width: 300px;
+            background-color: #222222;
+            border: 1px solid #555;
+            border-radius: 16px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+         }
+         .left h2 {
+            margin-top: 0;
+            margin-bottom: 4px;
+         }
+         .left h4 {
+            margin: 0 0 8px 0;
+         }
+         .left label {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.15s;
+         }
+         .left label:hover {
+            background-color: #333;
          }
          .right {
             text-align: center;
+            align-items: center;
          }
-
          .sprite {
             width: 40px;
             height: 30px;
             background-image: url("{{ url_for('static', filename='pokemonicons-sheet.png') }}");
             background-size: 480px 3990px;
-        }
-        .sprite-container {
+         }
+         .sprite-container {
             display: flex;
-            gap: 0px; /* Adjust the gap between images */
-            overflow-x: auto; /* Add horizontal scrolling if needed */
+            gap: 0px;
+            overflow-x: auto;
             padding: 0px 0px 4px 0px;
-        }
-        .team-container {
-            display: grid;
-            grid-template-columns: 60px auto 240px auto 240px auto 80px auto 100px auto max-content; 
-            grid-template-rows: auto auto auto auto;
-            text-align: right;
-            line-height: 24px;
-            font-family: sans-serif;
-            font-size: 14px;
-        }
+         }
          ul {
             list-style-type: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+         }
+         ul li {
+            margin-bottom: 12px;
          }
          .vl {
             border-left: 1px solid #555;
@@ -96,41 +190,351 @@
             width: 100%;
          }
          .grid-item {
-            padding: 0px 4px;
+            padding: 4px 10px;
+            white-space: nowrap;
          }
          .munchstats-button {
-            background-color: #04AA6D; /* Green */
+            background: linear-gradient(135deg, #04AA6D, #038a57);
             border: none;
             color: white;
-            padding: 8px 8px;
+            padding: 8px 14px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 12px;
-            vertical-align: top;
+            font-weight: 500;
+            vertical-align: middle;
+            border-radius: 8px;
+            transition: opacity 0.2s, box-shadow 0.2s;
+         }
+         .munchstats-button:hover {
+            opacity: 0.9;
+            box-shadow: 0 2px 8px rgba(4, 170, 109, 0.3);
          }
          fieldset {
-            border-color: #555;
+            border: 1px solid #555;
+            border-radius: 10px;
             font-size: 12px;
-            margin: 5px;
-            padding-left: 5px;
-            padding-right: 5px;
+            margin: 8px 0;
+            padding: 10px 12px;
+            background-color: #2a2a2a;
          }
          legend {
-            font-size: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #aaa;
+            padding: 0 6px;
+         }
+         #loadButton {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+         }
+         .game-btn {
+            background-color: #555;
+            color: #e0e0e0;
+            border: 1px solid #666;
+            padding: 4px 10px;
+            margin: 2px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+         }
+         .game-btn:hover {
+            background-color: #038a57;
+            border-color: #038a57;
+         }
+         .game-btn.disabled {
+            pointer-events: none;
+            opacity: 0.4;
+         }
+         /* Replay Modal */
+         .replay-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+         }
+         .replay-modal-overlay.active {
+            display: flex;
+         }
+         .replay-modal {
+            background: #1e1e1e;
+            border: 1px solid #555;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 1200px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+         }
+         .replay-modal-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: #222222;
+            border-bottom: 1px solid #555;
+            flex-shrink: 0;
+         }
+         .replay-modal-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e0e0e0;
+            white-space: nowrap;
+         }
+         .replay-modal-external {
+            color: #04AA6D;
+            text-decoration: none;
+            font-size: 13px;
+            margin-right: 16px;
+            transition: opacity 0.2s;
+         }
+         .replay-modal-external:hover {
+            opacity: 0.8;
+         }
+         .replay-modal-close {
+            background: none;
+            border: 1px solid #555;
+            color: #e0e0e0;
+            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            transition: background-color 0.2s;
+         }
+         .replay-modal-close:hover {
+            background: #333;
+         }
+         .replay-modal-games {
+            display: flex;
+            gap: 4px;
+            margin-left: 12px;
+            flex: 1;
+         }
+         .replay-modal-game-btn {
+            background: #333;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            padding: 4px 12px;
+            margin: 0;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+         }
+         .replay-modal-game-btn:hover {
+            background: #444;
+            border-color: #04AA6D;
+         }
+         .replay-modal-game-btn.active {
+            background: #04AA6D;
+            border-color: #04AA6D;
+            color: #fff;
+         }
+         .replay-modal-game-btn.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+         }
+         .replay-modal-iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+         }
+         footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+         }
+         footer a {
+            color: #04AA6D;
+            text-decoration: none;
+         }
+         footer a:hover {
+            text-decoration: underline;
+         }
+         /* View Tabs */
+         .view-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+         }
+         .view-tab {
+            background: #333;
+            color: #bbb;
+            border: 1px solid #555;
+            padding: 8px 20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+         }
+         .view-tab:hover {
+            background: #3a3a3a;
+            color: #e0e0e0;
+         }
+         .view-tab.active {
+            background: #222222;
+            color: #04AA6D;
+            border-color: #04AA6D;
+            border-bottom-color: #222222;
+         }
+         .view-content { display: none; width: 100%; }
+         .view-content.active { display: block; }
+         /* Team Rankings */
+         .team-rank-card {
+            background: #222222;
+            border: 1px solid #555;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            text-align: left;
+         }
+         .team-rank-card:hover {
+            border-color: #04AA6D;
+            box-shadow: 0 4px 20px rgba(4, 170, 109, 0.15);
+         }
+         .team-rank-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            gap: 16px;
+            user-select: none;
+         }
+         .team-rank-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #04AA6D;
+            min-width: 32px;
+            text-align: center;
+         }
+         .team-rank-sprites {
+            display: flex;
+            gap: 0px;
+            flex-shrink: 0;
+         }
+         .team-rank-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex: 1;
+            flex-wrap: wrap;
+            font-size: 13px;
+         }
+         .team-rank-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+         }
+         .team-rank-stat-label {
+            color: #888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+         }
+         .team-rank-stat-value {
+            font-weight: 600;
+            color: #e0e0e0;
+            font-size: 14px;
+         }
+         .team-rank-expand {
+            color: #888;
+            font-size: 18px;
+            transition: transform 0.2s, color 0.2s;
+            flex-shrink: 0;
+         }
+         .team-rank-card.expanded .team-rank-expand {
+            transform: rotate(180deg);
+            color: #04AA6D;
+         }
+         .team-rank-replays {
+            display: none;
+            border-top: 1px solid #555;
+            padding: 0;
+            max-height: 300px;
+            overflow-y: auto;
+         }
+         .team-rank-card.expanded .team-rank-replays {
+            display: block;
+         }
+         .team-rank-replay-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 80px 80px 80px;
+            padding: 8px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: background-color 0.15s;
+            align-items: center;
+         }
+         .team-rank-replay-row:hover {
+            background: #2a2a2a;
+         }
+         .team-rank-replay-row:last-child {
+            border-bottom: none;
+         }
+         .team-rank-replay-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 80px 80px 80px;
+            padding: 6px 16px;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #2a2a2a;
+         }
+         .replay-won { color: #04AA6D; }
+         .replay-lost { color: #e05555; }
+         .team-rank-names {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: #999;
+            padding: 0 16px 8px 60px;
+         }
+         .team-rank-names span::after {
+            content: " /";
+            color: #555;
+         }
+         .team-rank-names span:last-child::after {
+            content: "";
+         }
+         .team-rank-names {
+            cursor: pointer;
          }
       </style>
 </head>
 <body>
 <div class="twitter-follow-div">
 <a class="munchstats-button" href="https://munchstats.com" target="_blank">Check out MunchStats!</a>
-<a href="https://ko-fi.com/V7V2QR4P2" target="_blank"><img alt="Buy Me a Coffee at ko-fi.com" border="0" height="29" src="https://storage.ko-fi.com/cdn/kofi4.png?v=3" style="border:0px;height:29px;"/></a>
+<a href="https://ko-fi.com/V7V2QR4P2" target="_blank"><img alt="Buy Me a Coffee at ko-fi.com" border="0" height="29" src="https://storage.ko-fi.com/cdn/kofi4.png?v=3" style="border:0px;height:29px;vertical-align:middle;border-radius:8px;"/></a>
 <a class="twitter-follow-button" data-dnt="true" data-show-count="false" data-show-screen-name="false" data-size="large" href="https://twitter.com/MunchStats?ref_src=twsrc%5Etfw">Follow @MunchStats</a><script async="" charset="utf-8" src="https://platform.twitter.com/widgets.js"></script>
 </div>
 <div class="replay-container">
 <div class="left">
 <h2>Replay Searcher</h2>
-<h4 style="margin: 5px;">Select Format</h4>
+<h4>Select Format</h4>
 <select id="formatSelect">
                {% for format in available_formats %}
                   <option value="{{ format }}">{{ format }}</option>
@@ -138,19 +542,19 @@
             </select>
 <fieldset>
 <legend>Filter By Pokemon</legend>
-<input id="pokemonValue" placeholder='Seperate by comma. ex "Incineroar, Flutter Mane, Urshifu"' style="width: -webkit-fill-available;" type="text"/>
-<div>
+<input id="pokemonValue" placeholder='Separate by comma, e.g. "Incineroar, Flutter Mane"' type="text"/>
+<label>
 <input checked="" id="allPokemon" name="drone" type="radio" value="allPokemon"/>
-<label for="allPokemon">Find All Pokemon on a Team Search</label>
-</div>
-<div>
+Find All Pokemon on a Team Search
+</label>
+<label>
 <input id="anyPokemon" name="drone" type="radio" value="anyPokemon"/>
-<label for="anyPokemon">Find Any Pokemon on a Team Search</label>
-</div>
+Find Any Pokemon on a Team Search
+</label>
 </fieldset>
 <fieldset>
 <legend>Filter By Players</legend>
-<input id="playerValue" placeholder='Seperate by comma. ex "Ash, Wolfe, Ray Rizzo"' style="width: -webkit-fill-available;" type="text"/>
+<input id="playerValue" placeholder='Separate by comma, e.g. "Ash, Wolfe"' type="text"/>
 </fieldset>
 <label>
 <input id="usedToggle" type="checkbox"/> Pokemon Participated in Battle
@@ -170,6 +574,11 @@
 <button id="loadButton">Search Replays</button>
 </div>
 <div class="right">
+<div class="view-tabs">
+<button class="view-tab active" data-view="replays">Top Replays</button>
+<button class="view-tab" data-view="rankings">Top Teams</button>
+</div>
+<div class="view-content active" id="replaysView">
 <h2>Top Replays From Last Month</h2>
 <h3 id="format-name"></h3>
 <h4>Last Updated: May 01, 2026</h4>
@@ -179,11 +588,32 @@
 <ul id="replays-list"></ul>
 <div id="test_sprite"></div>
 </div>
+<div class="view-content" id="rankingsView">
+<h2>Top Team Compositions</h2>
+<h3 id="rankings-format-name"></h3>
+<h4>Last Updated: May 01, 2026</h4>
+<h3 id="rankingsLoadingText" style="display: none;">Loading...</h3>
+<h3 id="rankingsNoDataText" style="display: none;">No team data found.</h3>
+<h3 id="rankingsErrorText" style="display: none;">Error: Unable to get rankings.</h3>
+<div id="rankings-list"></div>
 </div>
-<div style="text-align: center; height: 32px">
-<h6><a href="about">About</a></h6>
-<h6>Pokémon and All Respective Names are Trademark &amp; © of Nintendo 1996-2024</h6>
 </div>
-<script src="{{ url_for('static', filename='replay_loader_1.5.js') }}"></script>
+</div>
+<div class="replay-modal-overlay" id="replayModal">
+<div class="replay-modal">
+<div class="replay-modal-header">
+<span class="replay-modal-title" id="replayModalTitle">Replay Viewer</span>
+<div class="replay-modal-games" id="replayModalGames"></div>
+<a class="replay-modal-external" id="replayExternalLink" href="#" target="_blank" title="Open on Pokemon Showdown">Open in New Tab</a>
+<button class="replay-modal-close" id="replayModalClose" title="Close">&times;</button>
+</div>
+<iframe class="replay-modal-iframe" id="replayIframe" src="about:blank"></iframe>
+</div>
+</div>
+<footer>
+<p><a href="about">About</a></p>
+<p>Pokémon and All Respective Names are Trademark &amp; © of Nintendo 1996-2024</p>
+</footer>
+<script src="{{ url_for('static', filename='replay_loader_1.6.js') }}"></script>
 </body>
 </html>
